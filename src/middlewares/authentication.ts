@@ -27,7 +27,7 @@ export const authentication =
 
             const jwtDecoded = parseTokenToObject(token)
 
-            if (typeof jwtDecoded !== "object" || !jwtDecoded) {
+            if (!jwtDecoded || typeof jwtDecoded !== "object") {
                 res.status(RESPONSES.INVALID_TOKEN.status).json({
                     message: RESPONSES.INVALID_TOKEN.message,
                 })

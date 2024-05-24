@@ -61,6 +61,24 @@ export const RESPONSES = {
         message: "INCORRECT_PASSWORD",
         status: 400,
     },
+    // ROOM
+    ROOM_NOT_FOUND: {
+        message: "ROOM_NOT_FOUND",
+        status: 404,
+    },
+    ROOM_NOT_UPDATED: {
+        message: "ROOM_NOT_UPDATED",
+        status: 400,
+    },
+    // BOOKING
+    BOOKING_NOT_FOUND: {
+        message: "BOOKING_NOT_FOUND",
+        status: 404,
+    },
+    BOOKING_NOT_UPDATED: {
+        message: "BOOKING_NOT_UPDATED",
+        status: 400,
+    },
 }
 
 export const filesPaths = (mimeType: string) => {

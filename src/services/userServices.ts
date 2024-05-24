@@ -9,6 +9,7 @@ import {
     UserNotFoundException,
 } from "../errors"
 import { JWTInterface, PROFILES, UserModelInterface } from "../interfaces"
+import Profile from "../models/Profile"
 import User from "../models/User"
 import { filesPaths } from "../utils"
 
@@ -30,7 +31,19 @@ export const registerService = async (
         profileId: PROFILES.CLIENT,
     })
 
-    return user
+    const currentUser = await user.reload({
+        attributes: {
+            exclude: ["createdAt", "updatedAt", "deletedAt"],
+        },
+        include: {
+            model: Profile,
+            attributes: {
+                exclude: ["createdAt", "updatedAt", "deletedAt"],
+            },
+        },
+    })
+
+    return currentUser
 }
 
 export const loginService = async (
@@ -40,6 +53,12 @@ export const loginService = async (
         where: { email: body.email },
         attributes: {
             exclude: ["createdAt", "updatedAt", "deletedAt"],
+        },
+        include: {
+            model: Profile,
+            attributes: {
+                exclude: ["createdAt", "updatedAt", "deletedAt"],
+            },
         },
     })
 
@@ -98,5 +117,17 @@ export const updateImageUserService = async (
         throw new CannotEditException()
     }
 
-    return userUpdated[0]
+    const currentUser = await userUpdated[0].reload({
+        attributes: {
+            exclude: ["createdAt", "updatedAt", "deletedAt"],
+        },
+        include: {
+            model: Profile,
+            attributes: {
+                exclude: ["createdAt", "updatedAt", "deletedAt"],
+            },
+        },
+    })
+
+    return currentUser
 }
