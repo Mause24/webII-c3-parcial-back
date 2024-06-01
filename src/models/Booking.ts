@@ -8,6 +8,7 @@ import {
 } from "sequelize"
 import { sequelize } from "../database"
 import Rooms from "./Rooms"
+import User from "./User"
 
 class Booking extends Model<
     InferAttributes<Booking>,
@@ -20,6 +21,7 @@ class Booking extends Model<
     declare checkInDate: CreationOptional<Date>
     declare checkOutDate: CreationOptional<Date>
     declare roomNumber: ForeignKey<Rooms["code"]>
+    declare clientId: ForeignKey<User["id"]>
 }
 
 Booking.init(
@@ -61,6 +63,15 @@ Booking.belongsTo(Rooms, {
     onUpdate: "CASCADE",
     foreignKey: {
         name: "roomNumber",
+        allowNull: false,
+    },
+})
+
+Booking.belongsTo(User, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+    foreignKey: {
+        name: "clientId",
         allowNull: false,
     },
 })

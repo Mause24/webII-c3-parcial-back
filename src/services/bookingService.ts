@@ -6,6 +6,7 @@ import {
 import { BookingModelInterface } from "../interfaces"
 import Booking from "../models/Booking"
 import Rooms from "../models/Rooms"
+import User from "../models/User"
 
 //GET ALL BOOKING
 export const getAllBookingService = async () => {
@@ -47,10 +48,13 @@ export const getBookingByIdService = async (id: number) => {
 }
 
 //POST BOOKING
-export const postBookingService = async (body: BookingModelInterface) => {
+export const postBookingService = async (
+    body: BookingModelInterface,
+    clientId: number
+) => {
     const [bookingCreated, created] = await Booking.findOrCreate({
-        where: { ...body },
-        defaults: { ...body },
+        where: { ...body, clientId: clientId },
+        defaults: { ...body, clientId: clientId },
     })
 
     if (!created) {
@@ -61,12 +65,25 @@ export const postBookingService = async (body: BookingModelInterface) => {
         attributes: {
             exclude: ["createdAt", "updatedAt", "deletedAt"],
         },
-        include: {
-            model: Rooms,
-            attributes: {
-                exclude: ["createdAt", "updatedAt", "deletedAt"],
+        include: [
+            {
+                model: Rooms,
+                attributes: {
+                    exclude: ["createdAt", "updatedAt", "deletedAt"],
+                },
             },
-        },
+            {
+                model: User,
+                attributes: {
+                    exclude: [
+                        "createdAt",
+                        "updatedAt",
+                        "deletedAt",
+                        "password",
+                    ],
+                },
+            },
+        ],
     })
 
     return currentBooking

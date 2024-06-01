@@ -4,7 +4,11 @@ import {
     BookingNotUpdatedException,
     CannotCreateException,
 } from "../errors"
-import { BookingByIdParams, BookingModelInterface } from "../interfaces"
+import {
+    BookingByIdParams,
+    BookingModelInterface,
+    JWTInterface,
+} from "../interfaces"
 import {
     deleteBookingByIdService,
     getAllBookingService,
@@ -62,8 +66,11 @@ export const postBooking = async (
     res: Response
 ) => {
     try {
+        const parsedUser = JSON.parse(
+            (req.query["jwt"] as string) ?? ""
+        ) as JWTInterface
         const body = req.body
-        const bookingCreated = await postBookingService(body)
+        const bookingCreated = await postBookingService(body, parsedUser.id)
         res.status(RESPONSES.CREATED.status).json({
             message: RESPONSES.CREATED.message,
             data: bookingCreated,
