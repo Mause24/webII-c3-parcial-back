@@ -1,8 +1,4 @@
-import {
-    CannotCreateException,
-    RoomNotFoundException,
-    RoomNotUpdatedException,
-} from "../errors"
+import { CannotCreateException, RoomNotFoundException } from "../errors"
 import { RoomsModelInterface } from "../interfaces"
 import Rooms from "../models/Rooms"
 
@@ -51,16 +47,22 @@ export const patchRoomByCodeService = async (
     code: number,
     body: Partial<RoomsModelInterface>
 ) => {
-    const [rows, roomsUpdated] = await Rooms.update(body, {
+    const roomToUpdate = await Rooms.findOne({
         where: { code: code },
-        returning: true,
+        attributes: {
+            exclude: ["createdAt", "updatedAt", "deletedAt"],
+        },
     })
 
-    if (rows <= 0) {
-        throw new RoomNotUpdatedException()
+    if (!roomToUpdate) {
+        throw new RoomNotFoundException()
     }
 
-    return roomsUpdated[0]
+    await roomToUpdate.update(body, {
+        where: { code: code },
+    })
+
+    return roomToUpdate
 }
 
 //DELETE ROOM BY CODE

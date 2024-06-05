@@ -111,6 +111,12 @@ export const patchBookingById = async (
             })
             return
         }
+        if (error instanceof BookingNotFoundException) {
+            res.status(RESPONSES.BOOKING_NOT_FOUND.status).json({
+                message: RESPONSES.BOOKING_NOT_FOUND.message,
+            })
+            return
+        }
         res.status(RESPONSES.SERVER_ERROR.status).json({
             message: RESPONSES.SERVER_ERROR.message,
         })

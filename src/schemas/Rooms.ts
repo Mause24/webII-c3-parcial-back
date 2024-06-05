@@ -2,7 +2,6 @@ import Joi from "joi"
 import { RoomByCodeParams, RoomsModelInterface } from "../interfaces"
 
 export const RoomsBodyScheme = Joi.object<RoomsModelInterface>({
-    code: Joi.number().required(),
     roomNumber: Joi.number().required(),
     price: Joi.number().required(),
     type: Joi.string().required(),

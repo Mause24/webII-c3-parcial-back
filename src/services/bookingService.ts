@@ -1,8 +1,4 @@
-import {
-    BookingNotFoundException,
-    BookingNotUpdatedException,
-    CannotCreateException,
-} from "../errors"
+import { BookingNotFoundException, CannotCreateException } from "../errors"
 import { BookingModelInterface } from "../interfaces"
 import Booking from "../models/Booking"
 import Rooms from "../models/Rooms"
@@ -94,28 +90,47 @@ export const patchBookingByIdService = async (
     id: number,
     body: Partial<BookingModelInterface>
 ) => {
-    const [rows, bookingsUpdated] = await Booking.update(body, {
+    const bookingToUpdate = await Booking.findOne({
         where: { id: id },
-        returning: true,
-    })
-
-    if (rows <= 0) {
-        throw new BookingNotUpdatedException()
-    }
-
-    const currentBooking = await bookingsUpdated[0].reload({
         attributes: {
             exclude: ["createdAt", "updatedAt", "deletedAt"],
         },
-        include: {
-            model: Rooms,
-            attributes: {
-                exclude: ["createdAt", "updatedAt", "deletedAt"],
-            },
-        },
     })
 
-    return currentBooking
+    if (!bookingToUpdate) {
+        throw new BookingNotFoundException()
+    }
+
+    await bookingToUpdate.update(body, {
+        where: { id: id },
+    })
+
+    const bookingUpdated = await bookingToUpdate.reload({
+        attributes: {
+            exclude: ["createdAt", "updatedAt", "deletedAt"],
+        },
+        include: [
+            {
+                model: Rooms,
+                attributes: {
+                    exclude: ["createdAt", "updatedAt", "deletedAt"],
+                },
+            },
+            {
+                model: User,
+                attributes: {
+                    exclude: [
+                        "createdAt",
+                        "updatedAt",
+                        "deletedAt",
+                        "password",
+                    ],
+                },
+            },
+        ],
+    })
+
+    return bookingUpdated
 }
 
 //DELETE BOOKING BY ID

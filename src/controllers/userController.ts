@@ -22,6 +22,7 @@ export const login = async (
         const { user, token } = await loginService(req.body)
         res.status(RESPONSES.OK.status).json({
             message: RESPONSES.OK.message,
+
             data: {
                 token,
                 user,
