@@ -11,6 +11,7 @@ import {
 } from "../interfaces"
 import {
     deleteBookingByIdService,
+    getAllBookingByUserService,
     getAllBookingService,
     getBookingByIdService,
     patchBookingByIdService,
@@ -22,6 +23,24 @@ import { RESPONSES } from "../utils/Dictionary"
 export const getAllBookings = async (_: Request, res: Response) => {
     try {
         const bookings = await getAllBookingService()
+        res.status(RESPONSES.OK.status).json({
+            message: RESPONSES.OK.message,
+            data: bookings,
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(RESPONSES.SERVER_ERROR.status).json({
+            message: RESPONSES.SERVER_ERROR.message,
+        })
+    }
+}
+
+export const getAllBookingsByUser = async (req: Request, res: Response) => {
+    try {
+        const parsedUser = JSON.parse(
+            (req.query["jwt"] as string) ?? ""
+        ) as JWTInterface
+        const bookings = await getAllBookingByUserService(parsedUser.id)
         res.status(RESPONSES.OK.status).json({
             message: RESPONSES.OK.message,
             data: bookings,

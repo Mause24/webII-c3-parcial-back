@@ -10,12 +10,58 @@ export const getAllBookingService = async () => {
         attributes: {
             exclude: ["createdAt", "updatedAt", "deletedAt"],
         },
-        include: {
-            model: Rooms,
-            attributes: {
-                exclude: ["createdAt", "updatedAt", "deletedAt"],
+        include: [
+            {
+                model: Rooms,
+                attributes: {
+                    exclude: ["createdAt", "updatedAt", "deletedAt"],
+                },
             },
+            {
+                model: User,
+                attributes: {
+                    exclude: [
+                        "createdAt",
+                        "updatedAt",
+                        "deletedAt",
+                        "password",
+                    ],
+                },
+            },
+        ],
+    })
+
+    return booking.map(booking => booking.toJSON())
+}
+
+//GET ALL BOOKING BY USER
+export const getAllBookingByUserService = async (clientId: number) => {
+    const booking = await Booking.findAll({
+        where: {
+            clientId: clientId,
         },
+        attributes: {
+            exclude: ["createdAt", "updatedAt", "deletedAt"],
+        },
+        include: [
+            {
+                model: Rooms,
+                attributes: {
+                    exclude: ["createdAt", "updatedAt", "deletedAt"],
+                },
+            },
+            {
+                model: User,
+                attributes: {
+                    exclude: [
+                        "createdAt",
+                        "updatedAt",
+                        "deletedAt",
+                        "password",
+                    ],
+                },
+            },
+        ],
     })
 
     return booking.map(booking => booking.toJSON())
@@ -28,19 +74,32 @@ export const getBookingByIdService = async (id: number) => {
         attributes: {
             exclude: ["createdAt", "updatedAt", "deletedAt"],
         },
-        include: {
-            model: Rooms,
-            attributes: {
-                exclude: ["createdAt", "updatedAt", "deletedAt"],
+        include: [
+            {
+                model: Rooms,
+                attributes: {
+                    exclude: ["createdAt", "updatedAt", "deletedAt"],
+                },
             },
-        },
+            {
+                model: User,
+                attributes: {
+                    exclude: [
+                        "createdAt",
+                        "updatedAt",
+                        "deletedAt",
+                        "password",
+                    ],
+                },
+            },
+        ],
     })
 
     if (!booking) {
         throw new BookingNotFoundException()
     }
 
-    return booking
+    return booking.toJSON()
 }
 
 //POST BOOKING
@@ -82,7 +141,7 @@ export const postBookingService = async (
         ],
     })
 
-    return currentBooking
+    return currentBooking.toJSON()
 }
 
 // PATCH BOOKING BY ID
@@ -130,7 +189,7 @@ export const patchBookingByIdService = async (
         ],
     })
 
-    return bookingUpdated
+    return bookingUpdated.toJSON()
 }
 
 //DELETE BOOKING BY ID

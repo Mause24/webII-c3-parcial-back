@@ -2,6 +2,7 @@ import { Router } from "express"
 import {
     deleteBookingById,
     getAllBookings,
+    getAllBookingsByUser,
     getBookingById,
     patchBookingById,
     postBooking,
@@ -22,6 +23,7 @@ export const bookingRoutes = Router()
 
 //GETS
 bookingRoutes.get("/", authentication([PROFILES.ADMIN]), getAllBookings)
+bookingRoutes.get("/user", authentication(), getAllBookingsByUser)
 bookingRoutes.get<any, BookingByIdParams>(
     "/:id",
     authentication(),
