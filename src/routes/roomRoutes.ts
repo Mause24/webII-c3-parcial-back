@@ -17,7 +17,7 @@ import {
 export const roomsRoutes = Router()
 
 //GETS
-roomsRoutes.get("/", authentication([PROFILES.ADMIN]), getAllRooms)
+roomsRoutes.get("/", authentication(), getAllRooms)
 roomsRoutes.get<any, RoomByCodeParams>(
     "/:code",
     authentication([PROFILES.ADMIN]),

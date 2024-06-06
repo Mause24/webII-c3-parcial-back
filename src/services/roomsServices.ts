@@ -26,7 +26,7 @@ export const getRoomByCodeService = async (code: number) => {
         throw new RoomNotFoundException()
     }
 
-    return room
+    return room.toJSON()
 }
 
 //POST ROOM
@@ -39,7 +39,8 @@ export const postRoomService = async (body: RoomsModelInterface) => {
     if (!created) {
         throw new CannotCreateException()
     }
-    return roomCreated
+
+    return roomCreated.toJSON()
 }
 
 // PATCH ROOM BY CODE
@@ -62,7 +63,7 @@ export const patchRoomByCodeService = async (
         where: { code: code },
     })
 
-    return roomToUpdate
+    return roomToUpdate.toJSON()
 }
 
 //DELETE ROOM BY CODE
